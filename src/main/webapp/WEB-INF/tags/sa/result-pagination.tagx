@@ -1,0 +1,64 @@
+<jsp:root xmlns:jsp="http://java.sun.com/JSP/Page" 
+		  xmlns:c="http://java.sun.com/jsp/jstl/core" 
+		  xmlns:fn="http://java.sun.com/jsp/jstl/functions" 
+		  version="2.1">
+
+<!-- 
+<c:set var="searchPagLink" value="/api/cms/ui/search/doPaginationUISearch" />
+ -->
+ <c:set var="searchPagLink" value="/api/cms/ui/search/getSearchResultsUI" />
+
+<c:set var="resultPagination" value="${searchResult.resultPagination}" />
+
+<div class="row pagination-bar clearfix">
+	<div class="col-sm-6">
+		<span class="text">Showing results ${resultPagination.firstResult} to ${resultPagination.lastResult} of ${searchResult.totalResults}</span>
+	</div>
+	<c:if test="${resultPagination.lastPage > 1}">
+	<div class="col-sm-4 hidden-print">
+		<div class="pull-right">
+			<ul class="pagination">
+			<c:if test="${resultPagination.currentPage > 1}">
+				<!-- 
+				<c:url var="pageUrl" value="${searchPagLink}">
+					<c:param name="search" value="${resultPagination.firstNavPageEntry.encodedUrl}" />
+				</c:url>
+				 -->
+				<c:url var="pageUrl" value="${searchPagLink}${resultPagination.firstNavPageEntry.paramUrl}"/>
+				<li><a href="${pageUrl}" title="Go to previous results page">&lt;</a></li>
+				<c:set var="prevLink" value="1" />
+			</c:if>
+			<c:if test="${resultPagination.lastNavPage > 1}" >
+				<c:forEach items="${resultPagination.entries}" var="entry">
+					<c:set var="cssClass" value=""/>
+					<c:if test="${entry.page == resultPagination.currentPage}">
+						<c:set var="cssClass" value="active"/>
+					</c:if>
+					<!-- 
+					<c:url var="pageUrl" value="${searchPagLink}">
+						<c:param name="search" value="${entry.encodedUrl}" />
+					</c:url>
+					 -->
+					<c:url var="pageUrl" value="${searchPagLink}${entry.paramUrl}"/>
+					<li>
+						<a class="${cssClass}" href="${pageUrl}" title="Go to results page ${entry.page}">${entry.page}</a>
+					</li>
+				</c:forEach>
+			</c:if>
+			<c:if test="${resultPagination.lastPage - resultPagination.currentPage > 0}">
+				<!--
+				<c:url var="pageUrl" value="${searchPagLink}">
+					<c:param name="search" value="${resultPagination.lastNavPageEntry.encodedUrl}" />
+				</c:url>
+				-->
+				<c:url var="pageUrl" value="${searchPagLink}${resultPagination.lastNavPageEntry.paramUrl}"/>
+				<li><a href="${pageUrl}" title="Go to next results page">&gt;</a></li> 
+			</c:if>
+			</ul>
+		</div>
+	</div>
+	</c:if>
+</div>
+
+	
+</jsp:root>

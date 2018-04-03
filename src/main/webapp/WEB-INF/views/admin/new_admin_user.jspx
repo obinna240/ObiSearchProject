@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<div 	xmlns:form="http://www.springframework.org/tags/form" 
+		xmlns:c="http://java.sun.com/jsp/jstl/core" 
+		xmlns:jsp="http://java.sun.com/JSP/Page" 
+		xmlns:spring="http://www.springframework.org/tags" 
+		xmlns:sec="http://www.springframework.org/security/tags" 
+		xmlns:sa="urn:jsptagdir:/WEB-INF/tags/sa" 
+		xmlns:fmt="http://java.sun.com/jsp/jstl/fmt"
+		id="right-panel">
+  	
+  	<jsp:output omit-xml-declaration="yes"/>
+  	<c:url var="formUrl" value="/admin/add/adminuser" />
+ 
+ 	<div id="content-head">
+		<h2>Add user</h2>
+	</div>
+  
+    <div id="content-main">
+    	
+		<p>Please enter new user account details</p>
+    	<p>All fields are mandatory unless marked as 'optional'.</p>
+
+	  <form:form method="post" action="${formUrl}" commandName="adminUserDetailsForm" id="pcgsearch">
+	  	<input type="hidden" name="FORM_UUID" value="${sessionScope.FORM_UUID}" />
+	  	
+		<fieldset>
+	  		<legend><span>Account details</span></legend>
+	  		<div class="fieldset-wrap">
+			  	<div class="row">
+				    <div class="col-sm-6">
+			  			<form:label path="username" class="control-label">User name<sa:required-field /></form:label>
+				  		<form:input path="username" title="Please enter a user name" cssClass="form-control" cssErrorClass="form-control input-error"/>
+				  		<form:errors path="username" element="span" cssClass="help-block error" />
+				  		<span class="help-block">This is what you will use to login and is usually your email address.</span>
+			  		</div>
+			  	</div>
+			  	<div class="row">
+			  		<div class="col-sm-6">
+			  			<form:label path="password" class="control-label">Password<sa:required-field /></form:label>
+				  		<form:password autocomplete="false" path="password" showPassword="true" cssClass="form-control" title="${passwordHelpText}" cssErrorClass="form-control input-error"/>
+				  		<form:errors path="password" element="span" cssClass="help-block error" />
+				  		<span class="help-block">${passwordHelpText}</span>
+			  		</div>
+			  		<div class="col-sm-6">
+			  			<form:label path="passwordcheck" class="control-label">Password again<sa:required-field /></form:label>
+				  		<form:password autocomplete="false" path="passwordcheck" showPassword="true" cssClass="form-control" title="Retype your password for verification" cssErrorClass="form-control input-error"/>
+				  		<form:errors path="passwordcheck" element="span" cssClass="help-block error" />
+				  		<span class="help-block">Retype your password for verification</span>
+			  		</div>
+			  	</div>
+		  	</div>
+	  	</fieldset>
+	  	
+	  	
+	  	<div class="form-actions clearfix">
+	  		<c:url value="/account/home" var="backUrl" />
+			<div class="pull-left">
+				<a href="${backUrl}" class="btn btn-default btn-back">Back to my account</a>
+			</div>
+			<div class="pull-right">
+				<input type="submit" value="Submit" class="btn btn-primary"/>
+			</div>	
+			
+		</div>
+	  	
+	  </form:form>
+
+  	</div>
+</div>

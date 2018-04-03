@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<div 	xmlns:c="http://java.sun.com/jsp/jstl/core" 
+		xmlns:jsp="http://java.sun.com/JSP/Page" 
+		xmlns:spring="http://www.springframework.org/tags" 
+		xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+		xmlns:sa="urn:jsptagdir:/WEB-INF/tags/sa"
+		xmlns:sec="http://www.springframework.org/security/tags" 
+		id="right-panel">
+  <jsp:output omit-xml-declaration="yes"/>
+  	<c:url var="formUrl" value="/admin/add/lauser" />
+ 
+ 	<div id="content-head">
+		<h2>Manage users</h2>
+	</div>
+  
+    <div id="content-main">
+  	
+		 <c:if test="${not empty flashMessage}">
+			<sa:flash-message messageKey="${flashMessage.text}" type="${flashMessage.type}" />
+		</c:if>
+    	
+   	
+    	<table id="user-table" class="table table-bordered">
+      <thead>
+        <tr>
+          <th>User name</th>
+          <th class="status">Active</th>
+          <th class="action">Action</th>          
+        </tr>
+      </thead>
+      <c:forEach items="${users}" var="user">
+      
+     	<c:if test="${user.id ne currentUser.id}">
+      
+		        <tr>
+		          	<td>
+		          		<c:out value="${fn:escapeXml(user.id)}" />
+		          	</td>
+		          	<td class="center">
+		          		<c:choose>
+		          			<c:when test="${user.enabled}">
+		          				<spring:url value="/resources/images/icon/active.gif" var="status_url" />
+		              			<spring:message code="account_active" text="Account active" var="status_label" />
+		          			</c:when>
+		          			<c:otherwise>
+		          				<spring:url value="/resources/images/icon/suspended.gif" var="status_url" />
+		              			<spring:message code="account_active" text="Account active" var="status_label" />
+		          			</c:otherwise>
+		          		</c:choose>
+		          		<img src="${status_url}" alt="${status_label}" title="${status_label}" />
+		          	</td>
+		          <c:choose>
+		          	<c:when test="${user.enabled}">
+		          	<td class="center">
+		              <spring:url value="/admin/suspend/${user.id}" var="suspend_url" />
+		              <spring:message code="entity_suspend" var="suspend_label" />
+		              <a href="${fn:escapeXml(suspend_url)}" title="${fn:escapeXml(suspend_label)}" class="btn btn-default">
+		              	<c:out value="${fn:escapeXml(suspend_label)}" />
+		              </a>
+		            </td>
+		          	</c:when>
+		          	<c:otherwise>
+		          	<td class="center">
+		              <spring:url value="//admin/activate/${user.id}" var="activate_url" />
+		              <spring:message arguments="${typeName}" code="entity_activate" var="activate_label"/>
+		              <a href="${fn:escapeXml(activate_url)}" title="${fn:escapeXml(activate_label)}" class="btn btn-default">
+		                <c:out value="${fn:escapeXml(activate_label)}" /> 
+		              </a>
+		            </td>
+		          	</c:otherwise>
+		          </c:choose>          
+		        </tr>
+	        </c:if>
+	      </c:forEach>
+	      <tr class="footer">
+	        <td colspan="10">
+	          <c:if test="${not empty maxPages}">
+	            <sa:pagination maxPages="${maxPages}" page="${param.page}" size="${param.size}" />
+	          </c:if>
+	        </td>
+	      </tr>
+	      
+    </table>  
+	  
+	  	<div class="form-tools clearfix">
+	  		<c:url var="backbuttonURL" value="/account/home"/>
+	  		<div class="pull-left">
+	  			<a href="${backbuttonURL}" class="btn btn-default">Back to my account</a>
+	  		</div>	
+		</div>
+	  
+  	</div>
+</div>

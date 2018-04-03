@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<div 	xmlns:form="http://www.springframework.org/tags/form" 
+		xmlns:c="http://java.sun.com/jsp/jstl/core" 
+		xmlns:jsp="http://java.sun.com/JSP/Page" 
+		xmlns:spring="http://www.springframework.org/tags" 
+		xmlns:sec="http://www.springframework.org/security/tags"
+		xmlns:sa="urn:jsptagdir:/WEB-INF/tags/sa" 
+		id="right-panel">
+  	
+  	<jsp:output omit-xml-declaration="yes"/>
+ 	<c:url var="formUrl" value="/admin/document/add" />
+ 
+ 	<div id="content-head">
+ 		<c:choose>
+	 		<c:when test="${!empty documentForm.id}">
+	 			<h2>Edit document</h2>
+	 		</c:when>
+	 		<c:otherwise>
+				<h2>Add document</h2>
+	 		</c:otherwise>
+	 	</c:choose>
+	</div>
+  
+    <div id="content-main">
+    	
+	  <form:form method="post" action="${formUrl}" commandName="documentForm" id="pcgsearch">
+	  	<input type="hidden" name="FORM_UUID" value="${sessionScope.FORM_UUID}" />
+  		<form:hidden path="id" />
+  		
+  		<c:if test="${!empty documentForm.id}">
+  			<div><h4>Unable to populate location/date fields as this data is stored in the solr index differently to this form.</h4></div>
+  		</c:if>
+  		
+  		<fieldset>
+	  		<legend><span>Document details</span></legend>
+	  		<div class="fieldset-wrap">
+				<div class="row-fluid">
+					<div class="col-sm-12">
+						<form:label path="pageTitle" class="control-label">Title<sa:required-field /></form:label>
+						<form:input path="pageTitle"  title="Enter a Title" cssClass="form-control" cssErrorClass="form-control input-error"/>
+						<form:errors path="pageTitle" cssClass="help-block error" />
+					</div>
+				</div>
+				<div class="row-fluid">	
+					<div class="col-sm-12">
+						<form:label path="pageContent" class="control-label">Content<sa:required-field /></form:label>
+						<form:textarea path="pageContent" rows="10" title="Enter Content" cssClass="form-control" cssErrorClass="form-control input-error"/>
+						<form:errors path="pageContent" cssClass="help-block error" />
+					</div>					
+				</div>
+				
+				<div class="row-fluid">	
+					<div class="col-sm-12">
+						<form:label path="pageUrl" class="control-label">Page Url</form:label>
+						<form:input path="pageUrl" title="Enter Page Url" cssClass="form-control" cssErrorClass="form-control input-error"/>
+						<form:errors path="pageUrl" cssClass="help-block error" />
+					</div>					
+				</div>
+				
+				<div class="row-fluid">	
+					<div class="col-sm-12">
+						<form:checkbox path="smartSuggest" />
+						<form:label path="smartSuggest"> Include in smart suggest results.</form:label>
+					</div>					
+				</div>
+			
+				<div class="row-fluid">	
+					<div class="col-sm-4">
+						<form:label path="docType" class="control-label">Type</form:label>
+						<form:select path="docType" cssClass="form-control" cssErrorClass="form-control input-error">
+							<form:option value="CMS_CONTENT" label="CMS Content"></form:option>	
+							<form:option value="EVENT" label="Event"></form:option>	
+						</form:select>
+					</div>	
+					<div class="col-sm-4">
+						<form:label path="context" class="control-label">Context</form:label>
+						<form:select path="context" cssClass="form-control" cssErrorClass="form-control input-error">
+							<form:options items="${contexts}"/>
+						</form:select>
+					</div>			
+					<div class="col-sm-4">
+						<form:label path="siteSection" class="control-label">Section</form:label>
+						<form:input path="siteSection" title="Enter Page Url" cssClass="form-control" cssErrorClass="form-control input-error"/>
+						<form:errors path="siteSection" cssClass="help-block error" />
+					</div>					
+				</div>
+				
+				<div class="row-fluid">	
+					<div class="col-sm-6">
+						<form:label path="classification1" class="control-label">Classification 1</form:label>
+						<form:select path="classification1" cssClass="form-control" cssErrorClass="form-control input-error">
+							<form:options items="${classifications1}"/>
+						</form:select>
+					</div>	
+					<div class="col-sm-6">
+						<form:label path="classification2" class="control-label">Classification 2</form:label>
+						<form:select path="classification2" cssClass="form-control" cssErrorClass="form-control input-error"  multiple="true">
+							<form:options items="${classifications2}"/>
+						</form:select>
+					</div>					
+				</div>
+				
+				<div class="row-fluid">	
+					<div class="col-sm-4">				
+						<form:label path="dateFrom" class="control-label" cssErrorClass="control-label error">Date from</form:label>
+						<form:input type="text" class="datepicker-mon form-control" path="dateFrom" /> 							
+						<form:errors path="dateFrom" cssClass="help-block error" />
+					
+					</div>   
+					<div class="col-sm-4">
+						<form:label path="dateTo" class="control-label" cssErrorClass="control-label error">Date to</form:label>
+						<form:input type="text" class="datepicker-mon form-control" path="dateTo" /> 							
+						<form:errors path="dateTo" cssClass="help-block error" />	
+					</div>
+					<div class="col-sm-4">
+						<form:label path="dateFrom" class="control-label" cssErrorClass="control-label error">Muti date picker</form:label>
+		  				<form:hidden id="inlineDatepickerVal" class="datepickerMultiVal" path="dateList"/>
+		  				<div id="inlineDatepicker"  class="datepickerMulti"><!-- xml fix --></div>
+					</div>
+				</div>
+				
+				
+				<div class="row-fluid">	
+					<div class="col-sm-6">				
+						<form:label path="priceFrom" class="control-label" cssErrorClass="control-label error">Price from</form:label>
+						<form:input type="text" class="form-control" path="priceFrom" /> 							
+						<form:errors path="priceFrom" cssClass="help-block error" />
+					
+					</div>   
+					<div class="col-sm-6">
+						<form:label path="priceTo" class="control-label" cssErrorClass="control-label error">Price to</form:label>
+						<form:input type="text" class="form-control" path="priceTo" /> 							
+						<form:errors path="priceTo" cssClass="help-block error" />	
+					</div>
+				</div>
+				
+				
+				<div class="row-fluid">	
+					<div class="col-sm-4">
+						<form:label path="postcode" class="control-label">Postcode</form:label>
+						<form:input path="postcode" title="Enter postcode" cssClass="form-control" cssErrorClass="form-control input-error"/>
+						<form:errors path="postcode" cssClass="help-block error" />
+					</div>	
+					<!-- 
+					<div class="col-sm-4">
+						<form:label path="latitude" class="control-label">Latitude</form:label>
+						<form:input path="latitude" title="Enter Latitude" cssClass="form-control" cssErrorClass="form-control input-error"/>
+						<form:errors path="latitude" cssClass="help-block error" />
+					</div>	
+					<div class="col-sm-4">
+						<form:label path="longitude" class="control-label">Longitude</form:label>
+						<form:input path="longitude" title="Enter longitude" cssClass="form-control" cssErrorClass="form-control input-error"/>
+						<form:errors path="longitude" cssClass="help-block error" />
+					</div>
+					 -->				
+				</div>
+				
+				
+			</div>
+
+			
+		</fieldset>
+		
+
+	  	<div class="form-actions clearfix">
+	  		<c:url var="backbuttonURL" value="/account/home"/>
+	  		<div class="pull-left">
+	  			<a href="${backbuttonURL}" class="btn btn-default">Back to my account</a>
+	  		</div>
+			<div class="pull-right">			
+	  		<input type="submit" value="Save" class="btn btn-primary" />
+	  		</div>
+		</div>
+	  	
+	  </form:form>	  
+  	</div>
+</div>

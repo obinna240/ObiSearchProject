@@ -1,0 +1,92 @@
+<div 
+	xmlns:spring="http://www.springframework.org/tags" 
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions" 
+	xmlns:util="urn:jsptagdir:/WEB-INF/tags/util" 
+	xmlns:c="http://java.sun.com/jsp/jstl/core" 
+	xmlns:jsp="http://java.sun.com/JSP/Page" 
+	xmlns:sa="urn:jsptagdir:/WEB-INF/tags/sa"
+	xmlns:sec="http://www.springframework.org/security/tags" 
+	id="right-panel">
+  <jsp:output omit-xml-declaration="yes" />
+  <c:url var="forgottenUrl" value="/account/forgotten/password" />
+  <c:url var="registerUrl" value="/register/index" />
+  <c:url var="logoutUrl" value="/resources/logout" />
+  <c:url var="accountUrl" value="/account"/>
+  
+  <sec:authorize access="hasRole('ROLE_ANONYMOUS')">
+	  <spring:message code="security_login_title" var="title" />
+	  
+	  <div id="content-main" class="login-page">
+		
+	    <spring:url value="/resources/login" var="form_url" />
+	    
+	<form action="${fn:escapeXml(form_url)}" method="post" id="people-first">
+	<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
+	<fieldset>
+		<legend><span>Login</span></legend>
+		<div class="fieldset-wrap">
+		<input type="hidden" name="FORM_UUID" value="${sessionScope.FORM_UUID}" />
+		<p class="login-message"><spring:message code="security_login_message" /></p>
+		<div class="row">
+			<div class="col-sm-6">
+		      <div class="control-group">
+		        <label for="j_username" class="control-label"><spring:message code="security_login_form_name" /></label>
+		        <div class="controls">
+		        	<input id="j_username" type='text' name='j_username' title="Enter your user name" placeholder="User name" class="form-control" />
+		        </div>
+		        <span class="help-block"><spring:message code="security_login_form_name_message" var="name_msg" /></span>
+		      </div>
+			</div>
+			<div class="col-sm-6">
+			  <div class="control-group">
+		        <label for="j_password" class="control-label"><spring:message code="security_login_form_password" /></label>
+		        <div class="controls">
+		        	<input id="j_password" type='password' name='j_password' autocomplete="off" title="Enter your password" class="form-control" placeholder="Password" />
+		        </div>
+		        <span class="help-block"><spring:message code="security_login_form_password_message" var="pwd_msg" /></span>
+		      </div>
+			</div>
+		</div>
+		
+	   </div>
+	   
+	  </fieldset>
+	      <c:if test="${not empty param.login_error}">
+	    
+	    	<c:choose>
+		    	<c:when test="${!empty login_suspended}">
+			        <div class="errors">
+				        <p class="alert alert-danger">
+				        	You cannot log on because your account has been disabled.
+				        </p>
+			       </div>
+		    	</c:when>
+		    	<c:otherwise>
+			      <div class="errors">
+			        <p class="alert alert-danger">
+			          <spring:message code="security_login_unsuccessful" />
+			          <c:out value="${SPRING_SECURITY_LAST_EXCEPTION.message}" />
+			          .
+			        </p>
+			      </div>
+		    	</c:otherwise>
+	    	</c:choose>
+	    </c:if>
+	      <div class="form-actions clearfix">
+			  <spring:message code="button_submit" var="submit_label" />
+			  <div class="pull-right">
+		      	<input id="proceed" type="submit" value="${fn:escapeXml(submit_label)}" class="btn btn-primary" />
+		      </div>
+		  </div>
+	    </form>
+	   </div>
+	  
+  </sec:authorize>
+  
+  <sec:authorize access="!hasRole('ROLE_ANONYMOUS')">
+	  <div id="content-main" class="login-page">
+	  	<p class="login-message">You are already logged in as <b><a href="${accountUrl}"><sec:authentication property="principal.username"/></a></b>.</p>
+	  	<p class="login-message">If you wish to login as a different user then you must first <b><a href="${logoutUrl}"> logout</a></b>.</p>
+	  </div>
+  </sec:authorize>
+</div>

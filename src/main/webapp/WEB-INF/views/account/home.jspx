@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<div xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:jsp="http://java.sun.com/JSP/Page"
+	xmlns:spring="http://www.springframework.org/tags"
+	xmlns:util="urn:jsptagdir:/WEB-INF/tags/util"
+	xmlns:sa="urn:jsptagdir:/WEB-INF/tags/sa"
+	xmlns:sec="http://www.springframework.org/security/tags"
+	id="right-panel">
+
+	<jsp:output omit-xml-declaration="yes" />
+	
+	<!-- URLS for Personal Accounts -->
+	<c:url value="/account/update" var="personalUrl" />
+	<c:url value="/admin/synonyms/list" var="manageSynonymsUrl" />
+
+	<c:url value="/admin/manageAdmin/list" var="manageAdminListUrl" />
+    <c:url value="/admin/add/adminuser" var="newUserUrl" />
+    <c:url value="/admin/document/add" var="addDocumentUrl" />
+    <c:url value="/admin/search" var="searchUrl" />
+  	<c:url value="/admin/recommendedLinks/list" var="recommendedLinksListUrl" />
+	<c:url value="/admin/systemConfig/list" var="sysConfigUrl" />
+	<c:url value="/admin/flush" var="flushCacheUrl" />
+	
+	
+	<div id="content-main">
+		
+ 		<c:if test="${not empty flashMessage}">
+			<sa:flash-message messageKey="${flashMessage.text}" type="${flashMessage.type}" />
+		</c:if>
+		
+		<div class="row">
+			
+			<div class="col-sm-6">
+				<div class="well account">
+					<ul class="nav nav-list">
+						<li class="nav-header">Update Account Details</li>
+						<li><a href="${personalUrl}">Account details</a></li>
+					</ul>
+				</div>
+			</div>
+			
+			<sec:authorize access="hasRole('ROLE_SA_USER')">
+				<div class="col-sm-6">
+					<div class="well adminaccount">
+						<ul class="nav nav-list">
+							<li class="nav-header">Manage Admin Accounts</li>
+							<li><a href="${newUserUrl}">Add admin user</a></li>
+							<li><a href="${manageAdminListUrl}">Manage admin accounts</a></li>
+							<li><a href="${sysConfigUrl}">System config details</a></li>
+							<li><a href="${flushCacheUrl}">Flush all caches</a></li>
+		
+						</ul>
+					</div>
+				</div>
+			</sec:authorize>
+		</div>
+
+		<div class="row">
+			<div class="col-sm-6">
+				<div class="well index">
+					<ul class="nav nav-list">
+			  			<li class="nav-header">Synonyms</li>
+			  			<li><a href="${manageSynonymsUrl}">Manage Synonyms</a></li>
+			  		</ul>
+			  		
+			  		<c:if test="${config.recommendedLinksEnabled}">
+						<ul class="nav nav-list">
+							<li class="nav-header">Manage Recommended links</li>
+							<li><a href="${recommendedLinksListUrl}">Recommended links</a></li>
+						</ul>
+					</c:if>
+			  		
+			  		<ul class="nav nav-list">
+			  			<li class="nav-header">Add document</li>
+			  			<li><a href="${addDocumentUrl}">Add document</a></li>	
+			  		</ul>
+			  		<ul class="nav nav-list">
+			  			<li class="nav-header">Search</li>
+			  			<li><a href="${searchUrl}">Search</a></li>	
+			  		</ul>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

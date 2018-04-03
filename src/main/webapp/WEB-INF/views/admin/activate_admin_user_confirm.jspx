@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<div xmlns:c="http://java.sun.com/jsp/jstl/core" 
+	xmlns:jsp="http://java.sun.com/JSP/Page" 
+	xmlns:spring="http://www.springframework.org/tags" 
+	xmlns:util="urn:jsptagdir:/WEB-INF/tags/util" 
+	id="right-panel">
+	<jsp:output omit-xml-declaration="yes"/>
+	
+	<c:url var="yesUrl" value="/admin/admin/activate/confirm/${user.id}" />
+	<c:url var="noUrl" value="/admin/manageAdmin/list" />
+		
+	<div id="content-head">
+		<h2>Activate user account confirmation</h2>
+	</div>
+
+	<div id="content-main">
+	
+		<p id="message" class="warning">You are about to activate an account giving the user the ability to log onto the site</p>
+		<p>You are about to activate the account : ${user.userName}</p>
+
+	 	
+	 	<p>Are you sure?</p>
+	 	<div class="form-actions clearfix">
+	 		<div class="pull-left">
+		 		<a href="${yesUrl}" class="btn btn-primary">Yes</a>
+		 		<a href="${noUrl}" class="btn btn-default">No</a>
+		 	</div>
+		 </div>
+  	</div>
+</div>

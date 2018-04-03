@@ -1,0 +1,354 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<div 	xmlns:form="http://www.springframework.org/tags/form" 
+		xmlns:c="http://java.sun.com/jsp/jstl/core" 
+		xmlns:jsp="http://java.sun.com/JSP/Page" 
+		xmlns:spring="http://www.springframework.org/tags" 
+		xmlns:sec="http://www.springframework.org/security/tags"
+		xmlns:sa="urn:jsptagdir:/WEB-INF/tags/sa" 
+		xmlns:fmt="http://java.sun.com/jsp/jstl/fmt"
+		id="right-panel">
+  	
+  	<jsp:output omit-xml-declaration="yes"/>
+ 	<c:url var="formUrl" value="/admin/search" />
+ 	
+ 	<div id="content-head">
+		<h2>Search</h2>
+	</div>
+  
+    <div id="content-main">
+    	
+    	  <c:if test="${not empty flashMessage}">
+			<sa:flash-message messageKey="${flashMessage.text}" type="${flashMessage.type}" />
+		  </c:if>
+		
+		  <form:form method="post" action="${formUrl}" commandName="searchForm" id="pcgsearch">
+		  	<input type="hidden" name="FORM_UUID" value="${sessionScope.FORM_UUID}" />
+	  	
+	  		<fieldset>
+		  		<legend><span>Search</span></legend>
+		  		<div class="fieldset-wrap">
+						<div class="row">
+						<div class="col-sm-4">
+							<form:label path="searchText" class="control-label js-smart-suggestions">Search text</form:label>
+							<form:input path="searchText"  title="Enter search text" cssClass="form-control" cssErrorClass="form-control input-error"/>
+							<form:errors path="searchText" cssClass="help-block error" />
+						</div>
+						<div class="col-sm-4">
+							<form:label path="location" class="control-label">Location</form:label>
+							<form:input path="location"  title="Enter location" cssClass="form-control" cssErrorClass="form-control input-error"/>
+							<form:errors path="location" cssClass="help-block error" />
+						</div>
+						<div class="col-sm-4">
+							<form:label path="radius" class="control-label">Radius (km)</form:label>
+							<form:input path="radius"  title="Enter radius" cssClass="form-control" cssErrorClass="form-control input-error"/>
+							<form:errors path="radius" cssClass="help-block error" />
+						</div>
+						
+					</div>
+					
+						<div class="row">
+						<div class="col-sm-6">				
+							<form:label path="dateFrom" class="control-label" cssErrorClass="control-label error">Date from</form:label>
+							<form:input type="text" class="datepicker-mon form-control" path="dateFrom" value="${fromDt}" /> 							
+							<form:errors path="dateFrom" cssClass="help-block error" />
+						
+						</div>   
+						<div class="col-sm-6">
+							<form:label path="dateTo" class="control-label" cssErrorClass="control-label error">Date to</form:label>
+							<form:input type="text" class="datepicker-mon form-control" path="dateTo" value="${toDt}" /> 							
+							<form:errors path="dateTo" cssClass="help-block error" />	
+						</div>		
+								
+					</div>
+						<div class="row">
+						
+						<div class="col-sm-4">
+							<form:label path="context" class="control-label">Context</form:label>
+							<form:select path="context" cssClass="form-control" cssErrorClass="form-control input-error">
+								<form:options items="${contexts}"/>
+							</form:select>
+						</div>	
+						
+						<div class="col-sm-4">
+							<form:label path="context" class="control-label">Searchable Or classifications</form:label>
+							<form:select path="searchableClassifications" cssClass="form-control" cssErrorClass="form-control input-error" multiple="true" size="7">
+								<form:options items="${classifications2}"/>
+							</form:select>
+						</div>		
+						
+						<div class="col-sm-4">
+							<form:label path="context" class="control-label">Boost Or classifications</form:label>
+							<form:select path="boostClassifications" cssClass="form-control" cssErrorClass="form-control input-error" multiple="true" size="7">
+								<form:options items="${classifications2}"/>
+							</form:select>
+						</div>	
+								
+					</div>
+					<div class="row">
+						
+						<div class="col-sm-6">
+							<form:label path="sortOption" class="control-label">Sort by</form:label>
+							<form:select path="sortOption" cssClass="form-control" cssErrorClass="form-control input-error">
+								<form:options items="${sortOptions}"/>
+							</form:select>
+						</div>	
+						<div class="col-sm-6">		
+							<div class="checkbox">
+								<form:checkbox path="showAllClassifications" />
+								<form:label path="showAllClassifications">Show all classifications.</form:label>
+							</div>
+						</div>
+					</div>	
+
+				</div>
+			</fieldset>
+	
+		  	<div class="form-actions clearfix">
+		  		<c:url var="backbuttonURL" value="/account/home"/>
+		  		<div class="pull-left">
+		  			<a href="${backbuttonURL}" class="btn btn-default">Back to my account</a>
+		  		</div>
+				<div class="pull-right">			
+		  		<input type="submit" value="Search" class="btn btn-primary" />
+		  		</div>
+			</div>
+	  	
+	 	</form:form>	  
+	 	
+	 	
+	 	<div class="AtoZform hidden-print">
+			<div class="btn-group atoz">
+				<c:forEach items="${alphaNumConfig}" var="AlphaNum">
+					<c:url value="/admin/atozSearch" var="atozUrl" >
+						<c:param name="atoz" value="${AlphaNum.letter}"/>
+					</c:url>
+			
+					<c:choose>
+						<c:when	test="${sAtoZ == AlphaNum.letter || AlphaNum.count == '0'}">
+							<a href="${atozUrl}" class="btn btn-disabled" title="${AlphaNum.count } results for ${AlphaNum.letter}" >
+								${AlphaNum.letter}
+							</a>
+						</c:when>
+						<c:otherwise>
+							<a href="${atozUrl}" class="btn btn-selected" title="${AlphaNum.count } results for ${AlphaNum.letter}" >
+								${AlphaNum.letter}
+							</a>
+						</c:otherwise>
+					</c:choose>
+
+				</c:forEach>
+			</div>
+		</div>
+
+ 		<c:if test="${empty invalidPostcodeText}">
+ 		
+ 			<c:if test="${config.recommendedLinksEnabled}">
+				<c:if test="${!empty searchResult.recommendedLinks}">
+					<div class="type-area">
+						<span class="text">Your search returned the following recommended links</span>
+					</div>
+					<div id="recommended-results" class="rec-links">
+						<h3 class="rec-title">Recommended links</h3>
+						<ul class="list-unstyled rec-links">
+							<c:forEach items="${searchResult.recommendedLinks}" var="link" varStatus="status">
+								<li class="recLink">
+									<div class="row-wrapper">
+										<div class="row">
+											<div class="col-sm-10">
+												<h3 class="result-title">
+													<a href="${link.url}">${link.title}</a>
+												</h3>
+												<p class="result-desc">${link.content}</p>
+											</div>
+										</div>
+									</div>
+								</li>
+							</c:forEach>
+						</ul>
+					</div>
+				</c:if>
+			</c:if> 
+ 		
+			<div class="type-area">
+				<span class="text">Your search 
+				<c:if test="${not empty searchResult.searchText }">
+					for  '<c:out value="${searchResult.searchText}" />'
+				</c:if>
+				<c:if test="${!empty sessionScope.searchInfo.pc}">
+					in/near  '<c:out value="${sessionScope.searchInfo.pc}" />' 
+				</c:if>
+				returned <strong><c:out value="${searchResult.totalResults}" /></strong> results:</span>
+			</div>
+		</c:if>
+	
+ 		<c:if test="${!empty searchResult.spellingSuggestions}">
+			<h4>Did you mean:</h4>
+			<ul>
+				<c:forEach items="${searchResult.spellingSuggestions}" var="suggestion" varStatus="status">
+					<!-- 
+					<c:url var="suggestionUrl" value="/api/cms/ui/search/suggestionUI">
+						<c:param name="search" value="${suggestion.encodedUrl}" />
+					</c:url>
+					 -->
+					 <c:url var="suggestionUrl" value="/api/cms/ui/search/getSearchResultsUI${suggestion.paramUrl}"/>
+					<a href="${suggestionUrl}" title="">${suggestion.suggestion}</a>
+				</c:forEach>
+			</ul>
+		</c:if>
+
+		<sa:filter />
+	
+	
+
+ 		<c:choose>
+			<c:when test="${!empty searchResult.items}">
+				<h4>Results</h4>
+				
+				<sa:result-pagination />
+			
+				<ol id="ch-full-list" class="list-unstyled listings">
+		
+					<c:forEach items="${searchResult.items}" var="item" varStatus="status">
+						<li class="provider result">
+							<div class="row-wrapper">
+								<div class="row">
+									<div class="col-sm-10">
+										<h4 class="result-title">
+											Id: ${item.id}
+											<c:if test="${!empty item.distance}"> 
+											 	(<fmt:formatNumber type="number" maxFractionDigits="2" value="${item.distance}" /> km)
+											</c:if>
+										</h4>
+										<h4 class="result-title">Title: ${item.title}
+										</h4>
+										<div>
+											<p>Content: ${item.content}</p>
+										</div>
+										<div>
+											<p>Classifications: ${item.classifications}</p>
+										</div>
+										
+										<div>
+											<p>Contexts:
+											<c:forEach items="${item.contextList}" var="context">
+												${context};
+											</c:forEach>
+											</p>
+										</div>
+										
+										<c:if test="${!empty item.highlightSnippetsTitle}">
+											<p><strong>Highlighted title result(s)</strong></p>
+											<c:forEach items="${item.highlightSnippetsTitle}" var="ht">
+												<h4>${ht}</h4>
+											</c:forEach>
+										</c:if>
+										
+										<c:if test="${!empty item.highlightSnippetsContent}">
+											<p><strong>Highlighted content result(s)</strong></p>
+											<c:forEach items="${item.highlightSnippetsContent}" var="hc">
+												<p>${hc}</p>
+											</c:forEach>
+										</c:if>
+										
+										<c:if test="${!empty item.highlightSnippetsClassification}">
+											<p><strong>Highlighted classification result(s)</strong></p>
+											<c:forEach items="${item.highlightSnippetsClassification}" var="hcl">
+												<p>${hcl}</p>
+											</c:forEach>
+										</c:if>
+										
+									</div>
+									<div class="col-sm-2">
+										<ul class="list-unstyled actions">
+											<li>
+												<c:url value="/admin/document/edit" var="editUrl" >
+													<c:param name="id" value="${item.id}"/>
+												</c:url>
+												<a href="${editUrl}" class="btn btn-primary" title="edit">Edit</a>
+											</li>
+											<li>
+												<c:url value="/admin/document/remove" var="removeUrl">
+													<c:param name="id" value="${item.id}"/>
+												</c:url>
+												<a href="${removeUrl}" class="btn btn-primary" title="tremove">Remove</a>
+											</li>
+										</ul>
+									</div>
+								</div>
+							</div>
+						</li>
+							
+					</c:forEach>
+				</ol>
+				
+				<sa:result-pagination />
+				
+			</c:when>
+			<c:otherwise>
+				<h4>No results found</h4>
+			</c:otherwise>
+		</c:choose>
+		
+		<c:if test="${showmap == true}">
+
+			<div id="showmap">
+				<h4>Results on the map</h4>
+				<div class="ch-listing row">
+					<div id="ch-location" class="col-sm-12">
+						<div class="map-holder"
+							style="position: relative; overflow: hidden;">
+							<div id="search-map" style="width: 100%; height: 400px;">
+								<!-- xml fix -->
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</c:if>
+		
+		<c:if test="${!empty searchResult.resultLocation}">
+			<h3>Please confirm your location</h3>
+			<div>
+				<p>Based on the details you entered we have found a number of locations. Please select from the list below.</p>
+	
+				<table class="table">
+					<thead>
+						<tr>
+							<td>Name</td>
+							<td>Type</td>
+							<td>Postcode district</td>
+							<td>Borough</td>
+							<th class="action">Select</th>  
+						</tr>
+					</thead>
+					<tbody>
+						<c:forEach items="${searchResult.resultLocation.locations}" var="location">
+						<tr>
+							<td>${location.name}</td>
+							<td>${location.localType}</td>
+							<td>${location.postcodeDistrict}</td>
+							<c:choose>
+								<c:when test="${location.districtBorough}">
+									<td>${location.districtBorough}</td>
+								</c:when>
+								<c:otherwise>
+									<td>${location.countyUnitary}</td>
+								</c:otherwise>
+							</c:choose>
+							<td>
+								<spring:url value="${location.locationUrl}" var="select_url" />
+								<a href="${select_url}" title="Select">Select</a>
+								
+							</td>
+						</tr>
+						</c:forEach>
+					</tbody>
+				</table>
+	
+	
+			</div>
+		</c:if>	
+		
+		
+  	</div>
+</div>

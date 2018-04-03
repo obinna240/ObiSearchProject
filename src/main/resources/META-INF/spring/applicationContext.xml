@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:aop="http://www.springframework.org/schema/aop" xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:jee="http://www.springframework.org/schema/jee" xmlns:task="http://www.springframework.org/schema/task"
+	xmlns:tx="http://www.springframework.org/schema/tx" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:mongo="http://www.springframework.org/schema/data/mongo"
+	xmlns:util="http://www.springframework.org/schema/util"
+	xsi:schemaLocation="http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.1.xsd   
+	http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd    
+	http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.1.xsd    
+	http://www.springframework.org/schema/jee http://www.springframework.org/schema/jee/spring-jee-4.1.xsd 
+	http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.1.xsd  
+	http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task-4.1.xsd  
+	http://www.springframework.org/schema/data/mongo http://www.springframework.org/schema/data/mongo/spring-mongo.xsd
+	http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-4.1.xsd
+	http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-4.1.xsd">
+	
+
+	<util:properties id="propertyConfigurer"
+		location="classpath:META-INF/config/systemConfigHelp.properties" />
+	<util:properties id="systemConfig"
+		location="classpath:META-INF/config/systemConfig.properties" />
+
+	<context:property-placeholder
+		location="file:c:/config/pcgsearch_config.properties"
+		ignore-unresolvable="false" />
+
+	<context:annotation-config/>
+	<context:component-scan base-package="com.sa.search" />
+
+	<bean id="SolrSearcher" class="com.sa.search.solrsearch.SolrSearchBean">
+		<property name="solrConfig">
+			<bean class="com.sa.search.solrsearch.SolrConfig">
+				<property name="solrURL" value="${solr.search.serverUrl}" />
+				<property name="solrCore" value="${solr.search.serverCore}" />
+			</bean>
+		</property>
+	</bean>
+
+	<bean id="MainSolrIndex" class="com.sa.search.solrsearch.SolrConfig">
+		<property name="solrURL" value="${solr.index.serverUrl}" />
+		<property name="solrCore" value="${solr.index.serverCore}" />
+	</bean>
+
+	<bean id="SolrIndexer" class="com.sa.search.indexing.IndexManager" />
+	
+	<!-- 
+    <mongo:mongo-client id="mongo" replica-set="${mongo.replicaset}" port="27017" credentials="${mongo.user}:${mongo.password}@${mongo.db}">
+    </mongo:mongo-client>
+ 	-->
+ 	
+    <mongo:db-factory id ="mongo" client-uri="${mongo.uri}" />
+	<bean id="mongoTemplate" class="org.springframework.data.mongodb.core.MongoTemplate">
+		<constructor-arg ref="mongo" />
+	</bean>
+ 	
+ 	<!-- 
+	<mongo:mongo-client id="mongo" host="${mongo.host}"	port="27017" credentials="${mongo.user}:${mongo.password}@${mongo.db}" />
+	<bean id="mongoTemplate" class="org.springframework.data.mongodb.core.MongoTemplate">
+		<constructor-arg ref="mongo" />
+		<constructor-arg name="databaseName" value="${mongo.db}" />
+	</bean>
+ 	-->
+	
+	<!-- Separate connection definition for the address data -->
+    <mongo:db-factory id ="mongoAddress" client-uri="${mongo.address.uri}" />
+	<bean id="mongoTemplateAddress" class="org.springframework.data.mongodb.core.MongoTemplate">
+        <constructor-arg ref="mongoAddress"/>
+    </bean>  
+
+	<!-- 
+    <mongo:mongo-client id="mongoAddress" replica-set="${mongo.address.replicaset}" port="27017" credentials="${mongo.address.user}:${mongo.address.password}@${mongo.address.db}" />
+    </mongo:mongo-client>
+    <mongo:mongo-client id="mongoAddress" host="${mongo.address.host}" port="27017" credentials="${mongo.address.user}:${mongo.address.password}@${mongo.address.db}">
+    </mongo:mongo-client>
+    <bean id="mongoTemplateAddress" class="org.springframework.data.mongodb.core.MongoTemplate">
+        <constructor-arg ref="mongoAddress"/>
+        <constructor-arg name="databaseName" value="${mongo.address.db}"/>          
+    </bean>  
+ 	-->
+	
+	<mongo:repositories base-package="com.sa.search.db.mongo.dao" />
+
+	<!-- General purpose caches -->
+	<bean id="cacheManager" class="org.springframework.cache.ehcache.EhCacheCacheManager">
+		<property name="cacheManager">
+			<bean id="ehcache"
+				class="org.springframework.cache.ehcache.EhCacheManagerFactoryBean">
+				<property name="configLocation" value="classpath:META-INF/spring/ehcache.xml" />
+			</bean>
+		</property>
+	</bean>
+
+	<bean id="daoCache" class="com.sa.search.util.CacheHelper">
+		<constructor-arg name="cacheManager" ref="cacheManager" />
+		<constructor-arg name="cacheName" value="dao" />
+	</bean>
+	
+	<bean id="passwordValidator" class="com.sa.search.view.controller.validator.PasswordValidator" />
+	
+	<bean name="saRequestFilterBean" class="com.sa.search.filter.SaRequestFilter">
+	
+		
+	</bean>
+</beans>
+                

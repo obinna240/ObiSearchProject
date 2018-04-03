@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<div xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:jsp="http://java.sun.com/JSP/Page"
+	xmlns:spring="http://www.springframework.org/tags"
+	xmlns:util="urn:jsptagdir:/WEB-INF/tags/util"
+	xmlns:sa="urn:jsptagdir:/WEB-INF/tags/sa"
+	xmlns:sec="http://www.springframework.org/security/tags"
+	id="right-panel">
+
+	<script type="text/javascript">
+		$(document).ready(function() {
+
+			$('#systemConfigViewTable').DataTable({
+				"bSort" : false,
+				"iDisplayLength" : 50
+			});
+
+		})
+	</script>
+	<style type="text/css">
+.helpbox {
+	display: none;
+	background-color: #FFDB8F;
+	font-size: 15px;
+}
+
+.showhim:hover .helpbox {
+	display: block;
+}
+</style>
+
+	<div id="content-head">
+		<h2>System cofig</h2>
+	</div>
+	
+	
+	<div id="content-main">
+		
+		<c:if test="${not empty flashMessage}">
+			<sa:flash-message messageKey="${flashMessage.text}"
+				type="${flashMessage.type}" arguments="${flashMessage.arguments}" />
+		</c:if>
+
+		<c:if test="${not empty configList}">
+			<table id="systemConfigViewTable"
+				class="table table-bordered table-striped">
+				<thead>
+					<tr>
+						<th>Config Name</th>
+						 <th>Edit</th>
+					</tr>
+				</thead>
+				<c:forEach var="item" items="${configList}" varStatus="status">
+					<tr>
+
+						<td class="showhim">${item.configDesc}<spring:eval
+								expression="@propertyConfigurer.getProperty('${item.configId}')"
+								var="helpValue" />
+
+							<div class="helpbox">
+								<c:if test="${helpValue != null}">
+									<spring:eval
+										expression="@propertyConfigurer.getProperty('${item.configId}')" />
+								</c:if>
+							</div></td>
+						
+						<td><c:url value="/admin/systemConfig/getConfig" var="editUrl" ><c:param name="configId" value="${item.configId}"/></c:url><a href="${editUrl}" >Edit</a></td>
+
+
+					</tr>
+				</c:forEach>
+			</table>
+		</c:if>
+		<div class="form-actions clearfix">
+			<div class="pull-left">
+				<sa:backbutton backbuttonvalue="backbutton" />
+			</div>
+		</div>
+	</div>
+</div>

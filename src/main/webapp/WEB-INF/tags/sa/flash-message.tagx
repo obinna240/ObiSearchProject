@@ -1,0 +1,14 @@
+<jsp:root xmlns:jsp="http://java.sun.com/JSP/Page" version="2.1"
+    xmlns:c="http://java.sun.com/jsp/jstl/core"
+    xmlns:sec="http://www.springframework.org/security/tags"
+    xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+    xmlns:spring="http://www.springframework.org/tags">
+
+	<jsp:directive.attribute name="type" type="java.lang.String" required="true" description="Type of message"/>
+	<jsp:directive.attribute name="messageKey" type="java.lang.String" required="true" description="Key for message from message.properties"/>
+	<jsp:directive.attribute name="arguments" type="java.lang.String" required="false" description="Arguments for message from message.properties"/>
+	
+	<div id="flashMessage" class="${type}">
+		<spring:message code="${messageKey}" arguments="${arguments}"/>
+	</div>
+</jsp:root>

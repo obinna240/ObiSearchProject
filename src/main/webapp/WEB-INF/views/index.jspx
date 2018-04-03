@@ -1,0 +1,15 @@
+<div xmlns:spring="http://www.springframework.org/tags"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+	xmlns:util="urn:jsptagdir:/WEB-INF/tags/util"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:jsp="http://java.sun.com/JSP/Page"
+	xmlns:sec="http://www.springframework.org/security/tags"
+	xmlns:sa="urn:jsptagdir:/WEB-INF/tags/sa" id="right-panel">
+
+	<jsp:output omit-xml-declaration="yes" />
+
+	<div id="content-head">
+		<h1>Welcome to the PCG search application</h1>
+	</div>
+	
+</div>

@@ -1,0 +1,49 @@
+<jsp:root xmlns:jsp="http://java.sun.com/JSP/Page" version="2.1"
+    xmlns:c="http://java.sun.com/jsp/jstl/core"
+    xmlns:sec="http://www.springframework.org/security/tags"
+    xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+    xmlns:spring="http://www.springframework.org/tags" >
+	
+	<!-- Markup for selected directories filter -->
+   	<c:if test="${!empty searchResult.resultFacets}">
+   		<div class="type-area"><!-- style="overflow:hidden"> -->
+	   		<c:forEach var="facet" items="${searchResult.resultFacets}">
+	   			<c:if test="${!empty facet.entries}">
+	   				<c:choose>
+	   					<c:when test="${facet.name eq 'Must have'}">
+	   						<c:forEach items="${facet.entries}" var="entry" varStatus="status">
+	   							<c:if test="${entry.selected}">
+	   								<c:if test="${status.count == 1}">
+			   							<strong>Must have: </strong>
+	   								</c:if>
+	   								
+									<span class="filter-box">
+											 <c:url var="typeUrl" value="/api/cms/ui/search/getSearchResultsUI${entry.paramUrl}"/>
+											${entry.name} <a href="${typeUrl}"><span class="filter-cross">x</span></a>
+									</span> 
+								</c:if>
+	   						</c:forEach>
+  						</c:when>
+  						<c:when test="${facet.name eq 'Optional'}">
+	   						<c:forEach items="${facet.entries}" var="entry"  varStatus="status">
+	   							<c:if test="${entry.selected }">
+	   								<c:if test="${status.count == 1}">
+			   							<strong>Optional: </strong>
+	   								</c:if>
+
+									<span class="filter-box">
+											 <c:url var="typeUrl" value="/api/cms/ui/search/getSearchResultsUI${entry.paramUrl}"/>
+											${entry.name} <a href="${typeUrl}"><span class="filter-cross">x</span></a>
+									</span> 
+								</c:if>
+	   						</c:forEach>
+  						</c:when>
+  					</c:choose>
+	   			</c:if>
+	   		</c:forEach>
+		</div>
+		
+	</c:if>
+	
+	
+</jsp:root>

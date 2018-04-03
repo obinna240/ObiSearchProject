@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE tiles-definitions PUBLIC "-//Apache Software Foundation//DTD Tiles Configuration 2.1//EN" "http://tiles.apache.org/dtds/tiles-config_2_1.dtd">
+<tiles-definitions>
+    
+     <definition extends="admin" name="admin/add/user">
+        <put-attribute name="body" value="/WEB-INF/views/admin/new_admin_user.jspx"/>
+    </definition>
+    
+    <definition extends="admin" name="admin/manageadmin/list">
+        <put-attribute name="body" value="/WEB-INF/views/admin/admin_manageadmin_list.jspx"/>
+    </definition>
+    
+     <definition extends="admin" name="admin/managedSynonyms/list">
+        <put-attribute name="body" value="/WEB-INF/views/admin/managedSynonyms/synonymsList.jspx"/>
+    </definition>
+  
+    <definition extends="admin" name="admin/managedSynonyms/edit">
+        <put-attribute name="body" value="/WEB-INF/views/admin/managedSynonyms/synonymsEdit.jspx"/>
+    </definition>
+    
+    <definition extends="admin" name="admin/recommendedLinks/list">
+        <put-attribute name="body" value="/WEB-INF/views/admin/recommendedLinks/recommendedLinksList.jspx"/>
+    </definition>
+   
+    <definition extends="admin" name="admin/recommendedLinks/edit">
+        <put-attribute name="body" value="/WEB-INF/views/admin/recommendedLinks/recommendedLinksEdit.jspx"/>
+    </definition>
+ 
+    <definition extends="admin" name="admin/document/add">
+        <put-attribute name="body" value="/WEB-INF/views/admin/document/edit_document.jspx"/>
+    </definition>
+
+     <definition extends="admin" name="admin/document/edit">
+        <put-attribute name="body" value="/WEB-INF/views/admin/document/edit_document.jspx"/>
+    </definition>
+
+    
+    <definition extends="admin" name="admin/search">
+        <put-attribute name="body" value="/WEB-INF/views/admin/search/search.jspx"/>
+    </definition>
+   
+   
+   <definition extends="admin" name="admin/systemConfig/view">
+		<put-attribute name="body" value="/WEB-INF/views/admin/systemConfig/systemConfigView.jspx" />
+	</definition>
+
+	<definition extends="admin"	name="admin/systemConfig/listAllContextsConfig">
+		<put-attribute name="body" value="/WEB-INF/views/admin/systemConfig/systemConfigs.jspx" />
+	</definition>
+
+	<definition extends="admin" name="admin/systemConfig/list">
+		<put-attribute name="body" value="/WEB-INF/views/admin/systemConfig/systemConfigList.jspx" />
+	</definition>
+
+	<definition extends="admin" name="admin/systemConfig/edit">
+		<put-attribute name="body" value="/WEB-INF/views/admin/systemConfig/systemConfigEdit.jspx" />
+	</definition>
+     
+</tiles-definitions>

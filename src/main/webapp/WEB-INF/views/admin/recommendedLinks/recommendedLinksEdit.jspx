@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<div xmlns:form="http://www.springframework.org/tags/form" 
+	xmlns:sec="http://www.springframework.org/security/tags" 
+	xmlns:c="http://java.sun.com/jsp/jstl/core" 
+	xmlns:jsp="http://java.sun.com/JSP/Page" 
+	xmlns:sa="urn:jsptagdir:/WEB-INF/tags/sa" 
+	id="right-panel">
+  <jsp:output omit-xml-declaration="yes"/>
+  <c:url value="/admin/recommendedLinks/edit" var="formUrl" />
+  <c:url value="/admin/recommendedLinks/list" var="listUrl" />
+  	<h3>Edit recommended link</h3>
+  	<p>Use this form to edit a recommended link which will be displayed on the search results page.</p>
+  	<p>
+  		<ul>
+  		<li>- The recommended link will be displayed if any of the specified keywords are found in the user's search phrase</li>
+  		<li>- To specify an exact multi-word keyword phrase, enclose the phrase in quotes, e.g. "information technology"</li>
+  		<li>- Keyword searching is case and whitespace insensitive</li>
+  		<li>- Use the | character to delimit the section of the link text which should be hyperlinked, e.g. "Please click |here|"</li>
+  		<li>- Leave the link text blank if you wish the result to be displayed like a standard search result</li>
+  		</ul>
+  	</p>
+  	
+	  <form:form method="post" action="${formUrl}" commandName="recommendeLinkForm" cssClass="forms">
+	  	<input type="hidden" name="FORM_UUID" value="${sessionScope.FORM_UUID}" />
+   		<form:hidden path="id" />
+ 	
+	  	<fieldset>
+	  		<legend><span>Recommended link details</span></legend>
+	  		<div class="fieldset-wrap">
+				<div class="row">
+				  	<div class="col-sm-12">
+						<form:label  path="keyword" class="control-label">Keyword(s)</form:label>
+				  		<form:input path="keyword" title="Please enter keyword" cssClass="form-control" maxlength="100" cssErrorClass="form-control input-error"/>
+				  		<form:errors path="keyword" cssClass="help-block error" />
+				  		<span class="help-block">Maximum 100 characters only.</span>
+					</div>	
+				</div>
+				<div class="row">
+				  	<div class="col-sm-12">
+						<form:label path="title" class="control-label">Link Text</form:label>
+				  		<form:input path="title" title="Please enter link text (use || to delimit hyperlink)" cssClass="form-control"  cssErrorClass="form-control input-error" maxlength="100"/>
+				  		<form:errors path="title" cssClass="help-block error" />
+				  		<span class="help-block">Maximum 100 characters only.</span>
+					</div>	
+				</div>
+				<div class="row">
+				  	<div class="col-sm-12">
+						<form:label path="description">Description</form:label>
+						<form:textarea path="description" rows="5" cols="40" cssClass="form-control" cssErrorClass="form-control input-error"/>
+						<form:errors path="description" cssClass="form-error" />
+						<span class="help-block">Maximum 100 characters only.</span>
+					</div>
+				</div>	
+			
+				<div class="row">
+				  	<div class="col-sm-12">
+						<form:label  path="url" class="control-label">Url</form:label>
+				  		<form:input path="url" title="Please enter url" cssClass="form-control" cssErrorClass="form-control input-error"/>
+				  		<form:errors path="url" cssClass="help-block error" />
+					</div>	
+				</div>
+		  	</div>
+	  	</fieldset>
+	  	
+	
+		<div class="form-actions clearfix">	  		
+			<div class="pull-left">
+				<a href="${listUrl}" class="btn btn-default">Back to list</a>
+			</div>
+			<div class="pull-right">			
+	  			<input type="submit" value="Save" class="btn btn-primary" />
+	  		</div>
+		</div>
+	  	
+	  </form:form>
+  
+</div>

@@ -1,0 +1,20 @@
+<jsp:root xmlns:jsp="http://java.sun.com/JSP/Page" version="2.1"
+    xmlns:c="http://java.sun.com/jsp/jstl/core"
+    xmlns:sec="http://www.springframework.org/security/tags"
+    xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+    xmlns:spring="http://www.springframework.org/tags">
+
+	<jsp:directive.attribute name="value" type="java.lang.Object" required="true" description="Value of system config field"/>	
+	<jsp:directive.attribute name="canDisplay" type="java.lang.Boolean" required="true" description="if this value can be printed"/>	
+
+	<c:choose>
+	<c:when test="${canDisplay }">
+		<div>
+		${value}
+		</div>
+	</c:when>	
+	<c:otherwise>	
+	
+	</c:otherwise>
+	</c:choose>
+</jsp:root>

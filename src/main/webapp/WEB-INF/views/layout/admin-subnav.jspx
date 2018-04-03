@@ -1,0 +1,106 @@
+<div xmlns:sec="http://www.springframework.org/security/tags"
+	xmlns:jsp="http://java.sun.com/JSP/Page"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+	xmlns:c="http://java.sun.com/jsp/jstl/core" id="left-panel"
+	class="dropshadow">
+	<jsp:output omit-xml-declaration="yes" />
+
+	<div id="left-panel-wrapper">
+
+		<sec:authorize access="hasRole('ROLE_USER')">
+			<div class="assist-nav-panel">
+
+				<span class="nav-heading">Account</span>
+				<ul class="nav nav-stacked user-nav" id="user-nav">
+					<li id="link-account"><c:url var="accountUrl" value="/account/home" />
+						<a href="${accountUrl}">Account details</a></li>
+
+					<li id="link-logout"><c:url value="/resources/logout"
+							var="logoutUrl" /> <a href="${logoutUrl}">Logout</a></li>
+				</ul>
+		
+				<c:if test="${!empty searchResult.resultFacets}">
+					<span class="nav-heading">Facets</span>
+					<ul id="category" class="facet nav">
+						<c:forEach var="facet" items="${searchResult.resultFacets}" varStatus="status">
+							<li><h4>${facet.name}</h4></li>
+							
+							<ul class="facet nav">
+								<c:if test="${!empty facet.start}">
+									<li>Start: ${facet.start}</li>
+								</c:if>
+								<c:if test="${!empty facet.end}">
+									<li>End: ${facet.end}</li>
+								</c:if>
+								<c:if test="${!empty facet.gap}">
+									<li>Gap: ${facet.gap}</li>
+								</c:if>
+								
+								<c:if test="${!empty facet.before}">
+									<li>Before: ${facet.before}</li>
+								</c:if>
+								<c:if test="${!empty facet.after}">
+									<li>After: ${facet.after}</li>
+								</c:if>
+								<c:if test="${!empty facet.between}">
+									<li>Between: ${facet.between}</li>
+								</c:if>
+							</ul>	
+							
+							<c:if test="${!empty facet.entries}">
+								<ul class="facet nav">
+									<c:forEach items="${facet.entries}" var="entry">
+										<li>
+											<c:choose>
+												<c:when test="${facet.name eq 'categoryAndTree' or facet.name eq 'categoryOrTree' or facet.name eq 'sitesection'}">
+													
+													<c:choose>
+														<c:when test="${entry.disabled == true}">
+															<span class="facet-disabled">${entry.name}</span>
+														</c:when>
+														<c:otherwise>
+														
+															<c:url var="checkBoxUrl" value="/images/checkbox_unselected.png" /> 
+															<c:set var="entrySelected" value="false" /> 
+															<c:if test="${entry.selected == true}">
+																<c:url var="checkBoxUrl" value="/images/checkbox_selected.png" />
+																<c:set var="entrySelected" value="true" />
+															</c:if> 
+														
+															<!-- 
+															<c:url var="typeUrl" value="/api/cms/ui/search/facetUI">
+																<c:param name="search" value="${entry.encodedUrl}" />
+															</c:url>
+															 -->
+															 <c:url var="typeUrl" value="/api/cms/ui/search/getSearchResultsUI${entry.paramUrl}"/>
+															 	
+															<a href="${typeUrl}" data-selected="${entrySelected}">
+																<img height="12" width="12" alt="${entry.name}" src="${checkBoxUrl}" />
+																<span class="facet-link">${entry.name}	(${entry.count})</span>
+															</a>
+														</c:otherwise>
+													
+													</c:choose>
+													
+												</c:when>
+												<c:otherwise>
+													<span class="facet-link">${entry.name}	(${entry.count})</span>
+												</c:otherwise>
+											</c:choose>
+										</li>
+									</c:forEach>
+								</ul>
+							</c:if>
+						</c:forEach>
+					</ul>
+				</c:if>
+		
+			</div>
+		
+		</sec:authorize>
+
+		<div class="alert alert-block alert-info">This is the secured admin portal</div>
+		
+
+	</div>
+</div>

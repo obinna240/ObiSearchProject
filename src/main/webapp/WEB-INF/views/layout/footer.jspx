@@ -1,0 +1,19 @@
+<div xmlns:c="http://java.sun.com/jsp/jstl/core" xmlns:jsp="http://java.sun.com/JSP/Page">
+	<jsp:output omit-xml-declaration="yes"/>
+  	
+  	<footer class="pcg-footer">
+	    <div class="pcg-copyright">
+	    	<div class="container">
+		        <div class="pcg-copyright-logo pull-left">
+		        <c:url var="url_logo" value="/images/footlogo.png" />
+		       	 	<img src="${url_logo}" alt="logo" title="Provided by PCG Care Solutions"/>
+		        </div>
+		  	  <div class="pcg-copyright-text pull-right">Copyright Public Consulting Group 2016</div>
+	  	  </div>
+	    </div>
+	    
+		    
+	</footer>
+  	
+  	
+</div>

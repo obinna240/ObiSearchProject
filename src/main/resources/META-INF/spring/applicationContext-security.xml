@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans:beans xmlns="http://www.springframework.org/schema/security"
+    xmlns:beans="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:context="http://www.springframework.org/schema/context"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans 
+    					 http://www.springframework.org/schema/beans/spring-beans-4.1.xsd
+    					http://www.springframework.org/schema/security 
+    					http://www.springframework.org/schema/security/spring-security-4.0.xsd 
+    					http://www.springframework.org/schema/context 
+    					http://www.springframework.org/schema/context/spring-context-4.1.xsd">
+
+	<context:property-placeholder location="file:c:/config/pcgsearch_config.properties" ignore-resource-not-found="false"/>
+	
+	
+	
+	<!-- Custom override beans -->
+	<beans:bean id="saUserService" class="com.sa.search.security.MongoUserDetailService" />
+	<beans:bean id="passwordEncoder" class="org.springframework.security.authentication.encoding.Md5PasswordEncoder"></beans:bean>
+	<beans:bean id="saltSource" class="org.springframework.security.authentication.dao.ReflectionSaltSource">
+		<beans:property name="userPropertyToUse" value="salt"/>
+	</beans:bean>
+	
+	<!-- Custom authentication success handler when login is permitted -->
+	<beans:bean id="SaAuthSuccessHandler" class="com.sa.search.security.SaAuthenticationSuccessHandler" />
+	
+	<!-- Custom authentication failure handler when login is not permitted -->
+	<beans:bean id="SaAuthFailureHandler" class="com.sa.search.security.SaAuthenticationFailureHandler" />
+	<!-- Custom logout handler -->
+	<beans:bean id="logoutSuccessHandler" class="com.sa.search.security.SaLogoutSuccessHandler" />
+	<beans:bean id="securityContextLogoutHandler" class="org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler"/>
+	<!-- 
+	<beans:bean id="logoutAntPathRequestMatcher" class="org.springframework.security.web.util.matcher.AntPathRequestMatcher">
+        <beans:constructor-arg value="logout" />
+    </beans:bean>
+     -->
+
+	<beans:bean id="logoutFilter" class="org.springframework.security.web.authentication.logout.LogoutFilter">
+	    <beans:property name="filterProcessesUrl" value="/resources/logout"/>
+	    <beans:constructor-arg  name="logoutSuccessHandler" ref="logoutSuccessHandler"/>
+	    <beans:constructor-arg  name="handlers">
+	        <beans:list>
+	            <beans:ref bean="securityContextLogoutHandler" />
+	        </beans:list>
+	    </beans:constructor-arg>
+	</beans:bean>
+	<global-method-security pre-post-annotations="enabled" />
+
+	<http pattern="/styles/**" security="none"/>
+	<http pattern="/images/**" security="none"/>
+	<http pattern="/js/**" security="none"/>
+ 
+	<!-- HTTP security configurations -->
+    <http auto-config="true" use-expressions="true">
+    
+		<anonymous />
+    	<form-login login-processing-url="/resources/login" 
+    				login-page="/content/login" 
+    				always-use-default-target="false"
+    				username-parameter="j_username" 
+        			password-parameter="j_password" 
+    				authentication-success-handler-ref="SaAuthSuccessHandler" 
+    				authentication-failure-handler-ref="SaAuthFailureHandler"/>
+
+  		<!-- 
+        <logout logout-url="/resources/logout" 	
+        		invalidate-session="true"
+        		success-handler-ref="SaLogoutSuccessHandler" />
+		<csrf disabled="true"/>
+ 		-->
+ 	
+ 	
+	 	<headers>
+			<frame-options policy="SAMEORIGIN" />
+			<hsts disabled="true"/>
+		</headers>
+		
+ 		<custom-filter after="LOGOUT_FILTER" ref="logoutFilter"/>
+   		
+   		<csrf disabled="true"/>
+   		<!-- <csrf/>	-->
+
+		<access-denied-handler error-page="/error/accessDenied"/>
+		
+        <custom-filter ref="saFilter" position="LAST"/>
+        
+			<intercept-url pattern="/events/**" access="hasAnyRole('ROLE_ADMIN','ROLE_VENDOR')" requires-channel="${secure.protocol}"/>
+		<intercept-url pattern="/**" access="permitAll" />
+		
+		<session-management session-fixation-protection="migrateSession">
+			<concurrency-control max-sessions="10"/>
+		</session-management>        
+		
+		
+    </http>
+
+
+	<!-- Configure Authentication mechanism -->
+    <authentication-manager alias="authenticationManager">
+      	    	 
+    	<authentication-provider user-service-ref="saUserService">
+    		<password-encoder ref="passwordEncoder">
+    			<salt-source ref="saltSource"/>
+    		</password-encoder>
+    	</authentication-provider>
+    	
+	</authentication-manager>
+	
+	
+	
+
+	<beans:bean id="saFilter" class="com.sa.search.security.SASecurityFilter">
+		<beans:property name="maxParamLength" value="5000" />
+
+		<!-- This list of URLs can be POSTed to without specifying a UUID -->
+		<beans:property name="allowedPOSTs">
+			<beans:list>
+					</beans:list>
+		</beans:property>
+
+		<!-- This list of URLs we are skipping XSS filter to allow html from tinyMCE -->
+		<beans:property name="whiteList">
+			<beans:list>
+				</beans:list>
+		</beans:property>
+		
+		<!-- This list of URLs we are allowed from external IPs -->
+		<beans:property name="allowedAPICalls">
+			<beans:list>
+				<beans:value>/api/cms/search</beans:value>
+				<beans:value>/api/cms/event</beans:value>
+			</beans:list>
+		</beans:property>
+
+	</beans:bean>
+
+</beans:beans>

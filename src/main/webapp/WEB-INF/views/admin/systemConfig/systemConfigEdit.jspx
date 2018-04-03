@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<div xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:jsp="http://java.sun.com/JSP/Page"
+	xmlns:spring="http://www.springframework.org/tags"
+	xmlns:util="urn:jsptagdir:/WEB-INF/tags/util"
+	xmlns:sa="urn:jsptagdir:/WEB-INF/tags/sa"
+	xmlns:sec="http://www.springframework.org/security/tags"
+	xmlns:form="http://www.springframework.org/tags/form" id="right-panel">
+
+	<jsp:output omit-xml-declaration="yes" />
+
+	<c:url value="/admin/systemConfig/edit" var="submitUrl" />
+	
+	<div id="content-head">
+		<h2>System cofig</h2>
+	</div>
+
+	<div id="content-main">
+		<c:if test="${not empty flashMessage}">
+			<sa:flash-message messageKey="${flashMessage.text}"
+				type="${flashMessage.type}" />
+		</c:if>
+		<form:form id="form" cssStyle="forms" method="post"
+			commandName="systemConfigForm" action="${submitUrl}" cssClass="forms">
+			<input type="hidden" name="FORM_UUID"
+				value="${sessionScope.FORM_UUID}" />
+			<form:hidden path="name" />
+			<form:hidden path="type" />
+			<form:hidden path="fullPath" />
+			<form:hidden path="editable" />
+			<form:hidden path="configId" id="configRoot" />
+		
+			<legend>Field Name: ${systemConfigForm.name}</legend>
+			<div class="fieldset-wrap">
+				<div class="row">
+
+					<c:choose>
+						<c:when test="${systemConfigForm.type.contains('String')}">
+							<div class="col-sm-12">
+								<form:label path="value" cssClass="control-label">${systemConfigForm.name}</form:label>
+								<div class="controls">
+									<c:choose>
+										<c:when
+											test="${not empty systemConfigForm.value and systemConfigForm.value.length() gt 100}">
+											<form:textarea rows="7" path="value" title="value"
+												cssClass="form-control" />
+										</c:when>
+										<c:otherwise>
+											<form:input path="value" cssClass="form-control"
+												maxlength="100" />
+										</c:otherwise>
+									</c:choose>
+									<span class="help-block">Please enter a
+										${systemConfigForm.type} value.</span>
+									<form:errors path="value" cssClass="help-block error" />
+								</div>
+							</div>
+						</c:when>
+						<c:when
+							test="${systemConfigForm.type.contains('Long') or 
+				systemConfigForm.type.contains('Integer')or 
+				systemConfigForm.type.contains('Float') or 
+				systemConfigForm.type.contains('Double')}">
+							<div class="col-sm-6">
+								<form:label path="value" cssClass="control-label">${systemConfigForm.name}</form:label>
+								<div class="controls">
+									<form:input path="value" cssClass="form-control" maxlength="30" />
+									<span class="help-block">Please enter a
+										${systemConfigForm.type} value.</span>
+									<form:errors path="value" cssClass="help-block error" />
+								</div>
+							</div>
+						</c:when>
+						<c:when
+							test="${systemConfigForm.type.contains('boolean') or systemConfigForm.type.contains('Boolean')}">
+							<div class="col-sm-6">
+								<div class="control-group">
+									<div class="controls">
+										<div class="radiobutton">
+											<form:radiobutton path="value" value="true" />
+											True
+											<form:radiobutton path="value" value="false" />
+											False
+										</div>
+									</div>
+								</div>
+							</div>
+						</c:when>
+						<c:otherwise>
+				Cannot edit ${itemType} field.				
+				</c:otherwise>
+					</c:choose>
+				</div>
+			</div>
+			<div class="form-actions clearfix">
+				<div class="pull-left">
+					<sa:backbutton backbuttonvalue="backbutton" />
+				</div>
+				<div class="pull-right">
+					<input type="submit" value="Submit" class="btn btn-primary"
+						 />
+				</div>
+			</div>
+		</form:form>
+
+
+
+	</div>
+</div>

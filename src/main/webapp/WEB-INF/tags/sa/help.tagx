@@ -1,0 +1,30 @@
+<jsp:root xmlns:jsp="http://java.sun.com/JSP/Page" 
+		  xmlns:c="http://java.sun.com/jsp/jstl/core" 
+		  xmlns:fn="http://java.sun.com/jsp/jstl/functions" 
+		  version="2.1">
+
+	<jsp:directive.attribute name="helpId" required="false" />
+
+	<c:catch var="e">
+	
+		<c:choose>		
+			<c:when test="${empty _display.helpText}">
+				<![CDATA[<!-- HELP ID: ${_display.helpId} -->]]>
+			</c:when>
+			<c:otherwise>
+				<div class="sa-callout sa-callout-info">
+					<div class="sr-only title">Help</div><p>${_display.helpText}</p>
+					<c:if test="${!_display.helpSummaryOnly}">
+						<p class="more-help"><a href="${_display.helpUrl}" target="_blank">Further information</a> (opens in new window)</p>
+					</c:if>
+				</div>
+			</c:otherwise>
+		</c:choose>
+	</c:catch>
+	<c:if test="${e!=null}">
+		<![CDATA[
+		<!-- Error - exception thrown in help.tagx : ${e} -->
+		]]>
+	</c:if>
+
+</jsp:root>
